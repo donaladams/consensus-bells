@@ -4,7 +4,7 @@
 
 
 #define COMMANDS_LEN 9
-const char setupCommands[COMMANDS_LEN][50] = {
+const String setupCommands[COMMANDS_LEN] = {
   "AT+CWMODE=1",
   "AT+CWJAP=\"NitroSauce\",\"123456789\"",
   "AT+CIPMUX=1",
@@ -17,26 +17,77 @@ const char setupCommands[COMMANDS_LEN][50] = {
 };
 
 
+//snprintf(msgToSend, 50, "AT+CIPSEND=1,16\r\n%s", message);
+//udpCommands[0] = "AT+CIPSTART=1,\"UDP\",\"192.168.1.107\",7000,7000,2";
+//udpCommands[1] = "AT+CIPSEND=1,16";
+//udpCommands[2] = message,
+//udpCommands[3] = "AT+CIPCLOSE=1";
+
+
+const String START_CONNECTION_FORMAT = "AT+CIPSTART=%d,\"UDP\",\"%s\",%d,%d,2";
+
 UDP::UDP(int rx, int tx): 
   mySerial(rx, tx)
 {
+  Serial.println("UDP setup");
   mySerial.begin(115200);
-  mySerial.println("AT+CIOBAUD=9600");
+  mySerial.println("AT+CIOBAUD=9600");  
+  mySerial.begin(9600);
+  mySerial.println("AT\r\nAT\r\nAT");
   waitForOK();
 
-  
-  mySerial.begin(9600);
   for(int i=0;i<COMMANDS_LEN;i++) {
-    mySerial.println(setupCommands[i]);
+    this->sendATCommand(setupCommands[i]);
     this->waitForOK();
     delay(20);
   }
-  
 }
 
-void UDP::send(char *message) {
+
+int UDP::openConnection(String ip, int port) {
+  int connectionId = 1;
+  String startConnectionMsg = "AT+CIPSTART=" + String(connectionId) + ",\"UDP\",\"" + ip +"\"," + String(7000) + "," + String(7000) + ",2";
+  sendATCommand(startConnectionMsg);
+  waitForOK();
+  return connectionId;
+}
+
+void UDP::send(int connectionId, String message) {
+  String atCommand = "AT+CIPSEND=" + String(connectionId) + "," + String(message.length());
+  this-> sendATCommand(atCommand);
+  waitForOK();
+  delay(1000);
+  sendATCommand(message);
+  waitForOK();
+}
+
+
+void UDP::sendATCommand(String message) {
   mySerial.println(message);  
 }
+
+
+// Read from serial until the end of a line, terminated NL-CR
+// Max line length 256.
+void UDP::readLine(char *output, int len) {
+  byte index;
+
+  for (index = 0; index < len-1; index++) {
+    while (!mySerial.available()) {}
+    char c = mySerial.read();
+
+    // Store the char in the output
+    output[index] = c;
+
+    if ((output[index-1] == '\r') && (output[index] == '\n')) {
+      break;
+    }
+  }
+  
+  output[index+1] = '\0';
+}
+
+
 
 void UDP::waitForOK() {
   while(true) {

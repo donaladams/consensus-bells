@@ -10,12 +10,12 @@ class UDP
     UDP(int rx, int tx);
     void waitForOK();
     bool expect(char *expected);
-    void send(char *message);
+    int openConnection(String ip, int port);
+    void send(int connectionId, String message);
+    void readLine(char *output, int len);
   private:
-    int _rx;
-    int _tx;
     SoftwareSerial mySerial;
-
+    void sendATCommand(String message);
 };
 
 
