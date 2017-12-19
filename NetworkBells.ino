@@ -10,19 +10,35 @@ SoftwareSerial mySerial(6, 7); // RX, TX
 
 #define BAUD_RATE 115200
 
-#define COMMANDS_LEN 4
-const char commands[COMMANDS_LEN][50] = {
+#define COMMANDS_LEN 9
+const char setupCommands[COMMANDS_LEN][50] = {
   "AT+CWMODE=1",
   "AT+CWJAP=\"NitroSauce\",\"123456789\"",
   "AT+CIPMUX=1",
-  "AT+CIPSERVER=1,80"
+  "AT+CIPSERVER=1,80",
+  "AT+CIPCLOSE=0",
+  "AT+CIPCLOSE=1",
+  "AT+CIPCLOSE=2",
+  "AT+CIPCLOSE=3",
+  "AT+CIPCLOSE=4"
+
 //  ,"AT+CIFSR"
 };
 
 
 
+const char* message = "Milo is awesome.";
+
+char msgToSend[50];
+#define UDP_COMMANDS_LEN 4
+char *udpCommands[UDP_COMMANDS_LEN];
 
 void setup() {
+  //snprintf(msgToSend, 50, "AT+CIPSEND=1,16\r\n%s", message);
+  udpCommands[0] = "AT+CIPSTART=1,\"UDP\",\"192.168.1.101\",7000";
+  udpCommands[1] = "AT+CIPSEND=1,16";
+  udpCommands[2] = message,
+  udpCommands[3] = "AT+CIPCLOSE=1";
 
   // Open serial communications and wait for port to open:
   Serial.begin(115200);
@@ -31,7 +47,7 @@ void setup() {
   }
 
  Serial.println("Running!!!"); 
-
+//
 //  mySerial.begin(115200);
 //  mySerial.println("AT+CIOBAUD=9600");
 //  waitForOK();
@@ -39,18 +55,16 @@ void setup() {
   mySerial.begin(9600);
 
   for(int i=0;i<COMMANDS_LEN;i++) {
-    mySerial.println(commands[i]);
-    delay(200);
+    mySerial.println(setupCommands[i]);
     waitForOK();
+    delay(20);
   }
-  
-  while(!expect("0,CONNECT")) {}
-  Serial.println("Got connection!!!"); 
 
-  Player player(buzzer);
-
-  player.playTune(songs::jingleBellsLength, songs::jingleBells);
-
+  for(int i=0;i<UDP_COMMANDS_LEN;i++) {
+    mySerial.println(udpCommands[i]);
+    waitForOK();
+    delay(1000);
+  }
 }
 
 
