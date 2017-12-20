@@ -63,7 +63,7 @@ int connectionIdToPort(int connectionId) {
 }
 
 int UDP::openConnection(String ip, int port, int connectionId) {
-  String startConnectionMsg = "AT+CIPSTART=" + String(connectionId) + ",\"UDP\",\"" + ip +"\"," + String(7000) + "," + String(connectionIdToPort(connectionId)) + ",2";
+  String startConnectionMsg = "AT+CIPSTART=" + String(connectionId) + ",\"UDP\",\"" + ip +"\"," + String(7000) + "," + String(connectionIdToPort(connectionId)) + ",0";
   sendATCommand(startConnectionMsg);
   waitForOK();
   return connectionId;
@@ -73,9 +73,10 @@ void UDP::send(int connectionId, String message) {
   String atCommand = "AT+CIPSEND=" + String(connectionId) + "," + String(message.length());
   this-> sendATCommand(atCommand);
   waitForOK();
-  delay(1000);
+  Serial.println("From send " + message );
   sendATCommand(message);
   waitForOK();
+  Serial.println("Sent!");
 }
 
 

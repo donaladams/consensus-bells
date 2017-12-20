@@ -3,6 +3,8 @@
 #include "Player.h"
 #include "Songs.h"
 #include "UDP.h"
+#include "Protocol.h"
+
 
 const int buzzer = 12;//the pin of the active buzzer
 const int interruptPin = 2;
@@ -23,11 +25,10 @@ void setup() {
   Serial.println("Running."); 
 
   UDP connection(WIFI_RX, WIFI_TX);
-//  int listenId = connection.openConnection("192.168.1.102", 7000);
-//
-//  Protocol protocol(&connection);
-//
-//  protocol.send("Hello");
+
+  Protocol protocol(&connection, 0);
+
+  protocol.send("Hello");
 
   while(true) {
     char buf[50];
