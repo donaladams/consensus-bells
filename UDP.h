@@ -1,7 +1,7 @@
 #ifndef UDP_h
 #define UDP_h
 
-#include <SoftwareSerial.h>
+#include <AltSoftSerial.h>
 #include "Arduino.h"
 
 class UDP
@@ -14,7 +14,7 @@ class UDP
     void send(int connectionId, String message);
     void readLine(char *output, int len);
   private:
-    SoftwareSerial mySerial;
+    AltSoftSerial mySerial;
     void sendATCommand(String message);
 };
 

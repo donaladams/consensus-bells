@@ -1,6 +1,6 @@
 #include "Arduino.h"
 #include "UDP.h"
-#include <SoftwareSerial.h>
+#include <AltSoftSerial.h>
 
 
 #define COMMANDS_LEN 9

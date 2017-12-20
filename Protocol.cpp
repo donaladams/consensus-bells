@@ -29,6 +29,6 @@ ReceivedMessage Protocol::receive() {
   char msg[253];
   sscanf(buf, "%[^:]:%d~%s", &junk, &id, &msg);
 
-  return { id, msg };
+  return { id, String(msg) };
 }
 

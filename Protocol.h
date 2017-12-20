@@ -7,7 +7,7 @@
 
 typedef struct {
   byte connectionId;
-  char *msg;
+  String msg;
 } ReceivedMessage;
 
 
