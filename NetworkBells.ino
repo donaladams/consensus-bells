@@ -23,9 +23,12 @@ void setup() {
   Serial.println("Running."); 
 
   UDP connection(WIFI_RX, WIFI_TX);
-  int listenId = connection.openConnection("192.168.1.2", 7000);
+//  int listenId = connection.openConnection("192.168.1.102", 7000);
+//
+//  Protocol protocol(&connection);
+//
+//  protocol.send("Hello");
 
-  
   while(true) {
     char buf[50];
     connection.readLine(buf, 50);

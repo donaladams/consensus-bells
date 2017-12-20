@@ -17,11 +17,22 @@ const String setupCommands[COMMANDS_LEN] = {
 };
 
 
+
+
 //snprintf(msgToSend, 50, "AT+CIPSEND=1,16\r\n%s", message);
 //udpCommands[0] = "AT+CIPSTART=1,\"UDP\",\"192.168.1.107\",7000,7000,2";
 //udpCommands[1] = "AT+CIPSEND=1,16";
 //udpCommands[2] = message,
 //udpCommands[3] = "AT+CIPCLOSE=1";
+
+
+String ips[5] = {
+  "192.168.1.10",
+  "192.168.1.11",
+  "192.168.1.12",
+  "192.168.1.13",
+  "192.168.1.14"
+};
 
 
 const String START_CONNECTION_FORMAT = "AT+CIPSTART=%d,\"UDP\",\"%s\",%d,%d,2";
@@ -41,12 +52,18 @@ UDP::UDP(int rx, int tx):
     this->waitForOK();
     delay(20);
   }
+
+  for(int i=0; i<5; i++) {
+    this->openConnection(ips[i], 7000, i);
+  }
 }
 
+int connectionIdToPort(int connectionId) {
+   return 7000 + 2 * connectionId;
+}
 
-int UDP::openConnection(String ip, int port) {
-  int connectionId = 1;
-  String startConnectionMsg = "AT+CIPSTART=" + String(connectionId) + ",\"UDP\",\"" + ip +"\"," + String(7000) + "," + String(7000) + ",2";
+int UDP::openConnection(String ip, int port, int connectionId) {
+  String startConnectionMsg = "AT+CIPSTART=" + String(connectionId) + ",\"UDP\",\"" + ip +"\"," + String(7000) + "," + String(connectionIdToPort(connectionId)) + ",2";
   sendATCommand(startConnectionMsg);
   waitForOK();
   return connectionId;
