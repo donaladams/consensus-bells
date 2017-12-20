@@ -29,11 +29,15 @@ void setup() {
   Protocol protocol(&connection, 0);
 
   protocol.send("Hello");
-
+  
   while(true) {
-    char buf[50];
-    connection.readLine(buf, 50);
-    Serial.println(buf);
+     ReceivedMessage msg = protocol.receive();
+     Serial.print("Received "); Serial.print(msg.msg); Serial.println(" from " + String(msg.connectionId));
+     protocol.send(String(msg.msg) + "a");
+    
+//    char buf[50];
+//    connection.readLine(buf, 50);
+//    Serial.println(buf);
   }
 
   Player player(buzzer);

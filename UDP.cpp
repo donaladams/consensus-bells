@@ -73,10 +73,8 @@ void UDP::send(int connectionId, String message) {
   String atCommand = "AT+CIPSEND=" + String(connectionId) + "," + String(message.length());
   this-> sendATCommand(atCommand);
   waitForOK();
-  Serial.println("From send " + message );
   sendATCommand(message);
   waitForOK();
-  Serial.println("Sent!");
 }
 
 
