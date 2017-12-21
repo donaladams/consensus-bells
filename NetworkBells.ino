@@ -20,19 +20,27 @@ void setup() {
   Serial.println("Running."); 
   UDP connection(WIFI_RX, WIFI_TX);
 
-  Protocol protocol(&connection, 1);
+  // Initiate an open protocol with each of the known devices
+  Protocol devices[] = {
+    Protocol(&connection, 0),
+    Protocol(&connection, 1),
+    Protocol(&connection, 2),
+    Protocol(&connection, 3),
+    Protocol(&connection, 4)
+  };
 
   //protocol.send("Hello");
   
   while(true) {
-    ReceivedMessage msg = protocol.receive();
+    ReceivedMessage msg = devices[0].receive(); // We ALWAYS receive on the 0 connection
+    
     Serial.print("Received "); Serial.print(msg.msg); Serial.println(" from " + String(msg.connectionId));
     if(msg.msg.equals("jingle")) {
-      protocol.send("bells");
+      devices[msg.connectionId].send("bells");
     } else if(msg.msg.equals("bells")) {
-      protocol.send("jingle");
+      devices[msg.connectionId].send("jingle");
     } else {
-      protocol.send("don't know that one.");
+      devices[msg.connectionId].send("don't know that one.");
     }
   }
 }
