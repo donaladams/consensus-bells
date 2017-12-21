@@ -2,39 +2,6 @@
 #include "UDP.h"
 #include <AltSoftSerial.h>
 
-
-#define COMMANDS_LEN 9
-const String setupCommands[COMMANDS_LEN] = {
-  "AT+CWMODE=1",
-  "AT+CWJAP=\"NitroSauce\",\"123456789\"",
-  "AT+CIPMUX=1",
-  "AT+CIPCLOSE=0",
-  "AT+CIPCLOSE=1",
-  "AT+CIPCLOSE=2",
-  "AT+CIPCLOSE=3",
-  "AT+CIPCLOSE=4",
-  "AT+CIFSR"
-};
-
-
-
-
-//snprintf(msgToSend, 50, "AT+CIPSEND=1,16\r\n%s", message);
-//udpCommands[0] = "AT+CIPSTART=1,\"UDP\",\"192.168.1.107\",7000,7000,2";
-//udpCommands[1] = "AT+CIPSEND=1,16";
-//udpCommands[2] = message,
-//udpCommands[3] = "AT+CIPCLOSE=1";
-
-
-String ips[5] = {
-  "192.168.1.10",
-  "192.168.1.11",
-  "192.168.1.12",
-  "192.168.1.13",
-  "192.168.1.14"
-};
-
-
 const String START_CONNECTION_FORMAT = "AT+CIPSTART=%d,\"UDP\",\"%s\",%d,%d,2";
 
 UDP::UDP(int rx, int tx): 
@@ -51,14 +18,37 @@ UDP::UDP(int rx, int tx):
   mySerial.print("AT\r\nAT\r\nAT");
   waitForOK();
 
+  #define COMMANDS_LEN 10
+  const String setupCommands[COMMANDS_LEN] = {
+    "AT+CWMODE=1",
+    "AT+CWJAP=\"NitroSauce\",\"123456789\"",
+    "AT+CIPSTA_CUR=\"192.168.1.11\",\"192.168.1.1\",\"255.255.255.0\"",
+    "AT+CIPMUX=1",
+    "AT+CIPCLOSE=0",
+    "AT+CIPCLOSE=1",
+    "AT+CIPCLOSE=2",
+    "AT+CIPCLOSE=3",
+    "AT+CIPCLOSE=4",
+    "AT+CIFSR"
+  };
+
+
   for(int i=0;i<COMMANDS_LEN;i++) {
     Serial.print("Attempting: "); Serial.println(setupCommands[i]); 
     this->sendATCommand(setupCommands[i]);
     this->waitForOK();
-    delay(50);
+    delay(100);
   }
 
-  for(int i=0; i<5; i++) {
+  String ips[1] = {
+//    "192.168.1.10",
+//    "192.168.1.11",
+    "192.168.1.12"
+//    "192.168.1.13",
+//    "192.168.1.14"
+  };
+
+  for(int i=0; i<1; i++) {
     this->openConnection(ips[i], 7000, i);
   }
 
@@ -70,7 +60,7 @@ int connectionIdToPort(int connectionId) {
 }
 
 int UDP::openConnection(String ip, int port, int connectionId) {
-  String startConnectionMsg = "AT+CIPSTART=" + String(connectionId) + ",\"UDP\",\"" + ip +"\"," + String(7000) + "," + String(connectionIdToPort(connectionId)) + ",0";
+  String startConnectionMsg = "AT+CIPSTART=" + String(connectionId) + ",\"UDP\",\"" + ip +"\"," + String(port) + "," + String(connectionIdToPort(connectionId)) + ",2";
   sendATCommand(startConnectionMsg);
   waitForOK();
   return connectionId;

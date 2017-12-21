@@ -1,5 +1,5 @@
 #include "pitches.h"
-#include "Player.h"
+//#include "Player.h"
 #include "Songs.h"
 #include "UDP.h"
 #include "Protocol.h"
@@ -23,16 +23,18 @@ void setup() {
 
   Protocol protocol(&connection, 0);
 
-  protocol.send("Hello");
-  
+
+  protocol.send("jingle");
   while(true) {
     ReceivedMessage msg = protocol.receive();
     Serial.print("Received "); Serial.print(msg.msg); Serial.println(" from " + String(msg.connectionId));
     if(msg.msg.equals("jingle")) {
       protocol.send("bells");
-      break;
+    } else if(msg.msg.equals("bells")) {
+      protocol.send("jingle");
     } else {
-      protocol.send("don't know that one.");
+//      protocol.send("Don't know that one.");
+      protocol.send("jingle");
     }
   }
 }
