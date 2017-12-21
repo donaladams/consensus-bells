@@ -18,7 +18,7 @@ const char setupCommands[][40] = {
 };
 
 // Map MAC addresses to IPs for static IP assignment
-const char macIpLookup[][2][15] = {
+const char macIpLookup[][2][18] = {
   { "a0:20:a6:12:39:32", "192.168.1.11" }
 };
 
