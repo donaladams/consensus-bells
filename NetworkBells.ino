@@ -11,13 +11,7 @@ const int interruptPin = 2;
 const int WIFI_RX = 8;
 const int WIFI_TX = 9;
 
-#define BAUD_RATE 115200
-
 void setup() {
-  
-  
-  Player player(buzzer);
-
   // Open serial communications and wait for port to open:
   Serial.begin(115200);
   while (!Serial) {
@@ -39,8 +33,9 @@ void setup() {
 //      delay(100);
 //      player.playTune(songs::jingleBellsLength, songs::jingleBells);
      if(msg.msg.equals("jingle")) {
+        //Player player(buzzer);
         protocol.send("bells");
-        player.playTune(songs::jingleBellsLength, songs::jingleBells);
+        //player.playTune(songs::jingleBellsLength, songs::jingleBells);
      } else {
         protocol.send("don't know that one.");
       }
