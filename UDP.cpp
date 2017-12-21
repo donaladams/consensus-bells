@@ -18,6 +18,7 @@ const String setupCommands[COMMANDS_LEN] = {
 
 
 
+
 //snprintf(msgToSend, 50, "AT+CIPSEND=1,16\r\n%s", message);
 //udpCommands[0] = "AT+CIPSTART=1,\"UDP\",\"192.168.1.107\",7000,7000,2";
 //udpCommands[1] = "AT+CIPSEND=1,16";
@@ -31,11 +32,6 @@ String ips[5] = {
   "192.168.1.12",
   "192.168.1.13",
   "192.168.1.14"
-};
-
-#define LOOKUP_LEN 1
-const char macIpLookup[LOOKUP_LEN][2][25] = {
-  { "a0:20:a6:12:39:32", "192.168.1.11" }
 };
 
 
@@ -56,22 +52,12 @@ UDP::UDP(int rx, int tx):
   waitForOK();
 
   for(int i=0;i<COMMANDS_LEN;i++) {
-    Serial.println("Attempting: "); Serial.println(setupCommands[i]); 
+    Serial.print("Attempting: "); Serial.println(setupCommands[i]); 
     this->sendATCommand(setupCommands[i]);
     this->waitForOK();
     delay(50);
   }
 
-
-  Serial.println("Setting ip.");
-  char *ip = this->getDeviceIp();
-  char setIpCmd[100];
-  snprintf(setIpCmd, 100, "AT+CIPSTA_CUR=\"%s\",\"192.168.1.1\",\"255.255.255.0\"", ip);
-  Serial.print("=");Serial.print(setIpCmd);Serial.println("="); 
-  this->sendATCommand(String(setIpCmd));
-  this->waitForOK();
-
-  Serial.println("Opening connections");
   for(int i=0; i<5; i++) {
     this->openConnection(ips[i], 7000, i);
   }
@@ -79,53 +65,9 @@ UDP::UDP(int rx, int tx):
   Serial.println("--UDP setup complete");
 }
 
-
-
-char *UDP::getDeviceIp() {
-  this->sendATCommand("AT+CIFSR");
-  char buf[256];
-  while(true) {
-     this->readLine(buf, 256);
-     
-     if(strstr(buf, "+CIFSR:STAMAC") != NULL) {
-       Serial.println("Breaking out!"); 
-       break;      
-     }
-
-     Serial.println("getDeviceIp() Skipping: -" + String(buf) + "-");
-  }
-
-  this->waitForOK();
-
-  Serial.println("Out!"); 
-  Serial.println(buf);
-
-  char junk[20];
-  char mac[20];
-  sscanf(buf, "%[^,],\"%[^\"]\"", junk, mac);
-
-  delay(100);
-
-  for(int i = 0; i < LOOKUP_LEN; i++) {
-    if(strstr(macIpLookup[i][0], mac) != NULL) {
-      Serial.println("Using IP: " + String(macIpLookup[i][1]));
-      return macIpLookup[i][1]; 
-    }
-  }
-
-  Serial.println("Unknown mac=" + String(mac));
-
-  return NULL;
-}
-
-
-
-
-
 int connectionIdToPort(int connectionId) {
    return 7000 + 2 * connectionId;
 }
-
 
 int UDP::openConnection(String ip, int port, int connectionId) {
   String startConnectionMsg = "AT+CIPSTART=" + String(connectionId) + ",\"UDP\",\"" + ip +"\"," + String(7000) + "," + String(connectionIdToPort(connectionId)) + ",0";
