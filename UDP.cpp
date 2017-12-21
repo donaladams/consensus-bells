@@ -40,20 +40,22 @@ const String START_CONNECTION_FORMAT = "AT+CIPSTART=%d,\"UDP\",\"%s\",%d,%d,2";
 UDP::UDP(int rx, int tx): 
   mySerial(rx, tx)
 {
-  
   Serial.println("--UDP setup starting");
-  
   mySerial.begin(115200);
+  delay(100);
   mySerial.println("AT+CIOBAUD=9600");
+  mySerial.println("AT+CIOBAUD=9600");
+  mySerial.println("AT+CIOBAUD=9600");
+  delay(100);
   mySerial.begin(9600);
   mySerial.print("AT\r\nAT\r\nAT");
   waitForOK();
 
   for(int i=0;i<COMMANDS_LEN;i++) {
-    //Serial.print("Attempting: "); Serial.println(setupCommands[i]); 
+    Serial.print("Attempting: "); Serial.println(setupCommands[i]); 
     this->sendATCommand(setupCommands[i]);
-    this->sendATCommand("AT");
     this->waitForOK();
+    delay(50);
   }
 
   for(int i=0; i<5; i++) {

@@ -26,27 +26,20 @@ void setup() {
   protocol.send("Hello");
   
   while(true) {
-      ReceivedMessage msg = protocol.receive();
-      Serial.print("Received "); Serial.print(msg.msg); Serial.println(" from " + String(msg.connectionId));
-
-//      protocol.send(String(msg.msg));
-//      delay(100);
-//      player.playTune(songs::jingleBellsLength, songs::jingleBells);
-     if(msg.msg.equals("jingle")) {
-        //Player player(buzzer);
-        protocol.send("bells");
-        //player.playTune(songs::jingleBellsLength, songs::jingleBells);
-     } else {
-        protocol.send("don't know that one.");
-      }
+    ReceivedMessage msg = protocol.receive();
+    Serial.print("Received "); Serial.print(msg.msg); Serial.println(" from " + String(msg.connectionId));
+    if(msg.msg.equals("jingle")) {
+      protocol.send("bells");
+      break;
+    } else {
+      protocol.send("don't know that one.");
+    }
   }
-
-  
 }
 
-
-
 void loop() { // run over and over
-
+//  Serial.println("In the loop!");
+  //Player player(buzzer);
+  //player.playTune(songs::jingleBellsLength, songs::jingleBells);
 }
 

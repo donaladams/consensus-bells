@@ -1,5 +1,6 @@
 
 #include "Protocol.h"
+#include <string.h>
 
 
 Protocol::Protocol(UDP * connection, int connectionId)  {
@@ -14,20 +15,24 @@ void Protocol::send(String message) {
 
 ReceivedMessage Protocol::receive() {
   char buf[256];
+
+  Serial.println("Entering Protocol::receive");
   while(true) {
      _connection->readLine(buf, 256);
-     if(String(buf).indexOf('~') >= 0) {
-        break;      
-      }
+     
+     if(strchr(buf, '~') != NULL) {
+       Serial.println("Breaking out!");
+       break;      
+     }
 
       Serial.println("Skipping: -" + String(buf) + "-");
   }
-  String protocolMessage = String(buf);
 
   char junk[10];
   byte id;
   char msg[253];
   sscanf(buf, "%[^:]:%d~%s", &junk, &id, &msg);
+  Serial.println("Leaving Protocol::receive");
 
   return { id, String(msg) };
 }
