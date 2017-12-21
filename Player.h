@@ -6,11 +6,11 @@
 class Player
 {
   public:
-    Player(int pin);
-    void play(int pitch, int duration);
-    void playTune(int tuneLength, int tune[][2]);
+    Player(byte pin);
+    void play(short pitch, short duration);
+    void playTune(byte tuneLength, byte tune[][2]);
   private:
-    int _pin;
+    byte _pin;
 };
 
 
