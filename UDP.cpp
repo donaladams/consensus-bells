@@ -18,12 +18,12 @@ const char setupCommands[][40] = {
 };
 
 // Map MAC addresses to IPs for static IP assignment
-const char macIpLookup[][2][18] = {
+const char macIpLookup[][2][15] = {
   { "a0:20:a6:12:39:32", "192.168.1.11" }
 };
 
 // All the IPs we'll open UDP connections to
-const char ips[][18] = {
+const char ips[][15] = {
   "192.168.1.10",
   "192.168.1.11",
   "192.168.1.12",
@@ -117,9 +117,9 @@ void UDP::waitForOK() {
 // address in a lookup table that maps MAC => IP address.
 const char *UDP::getDeviceIp() {
   this->sendATCommand("AT+CIFSR");
-  char buf[256];
+  char buf[100];
   while(true) {
-     this->readLine(buf, 256);
+     this->readLine(buf, 100);
 
      if(strstr(buf, "+CIFSR:STAMAC") != NULL) {
        break;
