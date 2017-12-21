@@ -16,6 +16,7 @@ class UDP
   private:
     AltSoftSerial mySerial;
     void sendATCommand(String message);
+    char * getDeviceIp();
 };
 
 
