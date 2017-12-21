@@ -1,7 +1,5 @@
-
 #include "Protocol.h"
 #include <string.h>
-
 
 Protocol::Protocol(UDP * connection, int connectionId)  {
   _connection = connection;
@@ -37,4 +35,3 @@ ReceivedMessage Protocol::receive() {
 
   return { id, String(msg) };
 }
-

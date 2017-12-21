@@ -161,6 +161,7 @@ void UDP::setDeviceIp() {
   this->waitForOK();
 }
 
+// Thump on the device until it likes our baud rate.
 void UDP::setBaudRate(int baud) {
   mySerial.begin(115200);
   delay(100);
@@ -173,6 +174,7 @@ void UDP::setBaudRate(int baud) {
   waitForOK();
 }
 
+// Send all the AT commands we need to get networking running properly.
 void UDP::initializeNetworking() {
   for(byte i=0; i < arraySize(setupCommands); i++) {
     Serial.println("Attempting: "); Serial.println(setupCommands[i]); 
@@ -182,10 +184,10 @@ void UDP::initializeNetworking() {
   }
 }
 
+// Open one UDP session (not really a connection) for each device.
 void UDP::openConnections() {
   Serial.println("Opening connections");
   for(byte i=0; i < arraySize(ips); i++) {
     this->openConnection(ips[i], 7000, i);
   }
 }
-

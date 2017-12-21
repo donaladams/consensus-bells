@@ -3,13 +3,10 @@
 #include "Arduino.h"
 #include "UDP.h"
 
-
-
 typedef struct {
   byte connectionId;
   String msg;
 } ReceivedMessage;
-
 
 class Protocol 
 {
@@ -20,8 +17,6 @@ class Protocol
   private:
     UDP * _connection;
     int _connectionId;
-    
-  
 };
 
 #endif

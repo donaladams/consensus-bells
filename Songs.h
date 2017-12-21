@@ -16,10 +16,6 @@ namespace songs {
     {NOTE_F4, 8}, {NOTE_E4, 8}, {NOTE_E4, 8}, {NOTE_E4, 16}, {NOTE_E4, 16},
     {NOTE_E4, 8}, {NOTE_D4, 8}, {NOTE_D4, 8}, {NOTE_E4, 8}, {NOTE_D4, 4}, {NOTE_G4, 4}
   };
-
-
-  
 }
-
 
 #endif
