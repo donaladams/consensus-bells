@@ -22,7 +22,7 @@ void setup() {
 
   Protocol protocol(&connection, 1);
 
-  protocol.send("Hello");
+  //protocol.send("Hello");
   
   while(true) {
     ReceivedMessage msg = protocol.receive();

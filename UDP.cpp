@@ -57,7 +57,6 @@ UDP::UDP(int rx, int tx):
 
   Serial.println("Setting ip.");
   
-  
   this->sendATCommand("AT+CIPSTA_CUR=\"192.168.1.12\",\"192.168.1.1\",\"255.255.255.0\"");
   this->waitForOK();
 
@@ -106,7 +105,7 @@ void UDP::readLine(char *output, int len) {
     // Store the char in the output
     output[index] = c;
 
-    if ((output[index-1] == '\r') && (output[index] == '\n')) {
+    if ((index > 1) && (output[index-1] == '\r') && (output[index] == '\n')) {
       break;
     }
   }

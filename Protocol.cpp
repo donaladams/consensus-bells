@@ -14,18 +14,19 @@ void Protocol::send(String message) {
 }
 
 ReceivedMessage Protocol::receive() {
-  char buf[256];
+  char buf[128];
 
   Serial.println("Entering Protocol::receive");
   while(true) {
-     _connection->readLine(buf, 256);
+     _connection->readLine(buf, 128);
+     buf[127] = '\0';
      
      if(strchr(buf, '~') != NULL) {
        Serial.println("Breaking out!");
        break;      
      }
 
-      Serial.println("Skipping: -" + String(buf) + "-");
+     Serial.println("Skipping: -" + String(buf) + "-");
   }
 
   char junk[10];
