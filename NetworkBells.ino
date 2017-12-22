@@ -29,13 +29,14 @@ void setup() {
     Protocol(&connection, 4)
   };
 
-  //protocol.send("Hello");
+  devices[2].send("jingle");
+
   
   while(true) {
     ReceivedMessage msg = devices[0].receive(); // We ALWAYS receive on the 0 connection
     
     Serial.print("Received "); Serial.print(msg.msg); Serial.println(" from " + String(msg.connectionId));
-    
+        
     if(msg.msg.equals("jingle")) {
       devices[msg.connectionId].send("bells");
     } else if(msg.msg.equals("bells")) {

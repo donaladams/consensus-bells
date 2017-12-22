@@ -19,7 +19,8 @@ const char setupCommands[][40] = {
 
 // Map MAC addresses to IPs for static IP assignment
 const char macIpLookup[][2][18] = {
-  { "a0:20:a6:12:39:32", "192.168.1.11" }
+  {"", ""},
+  {"a0:20:a6:12:39:32", "192.168.1.11" },
 };
 
 // All the IPs we'll open UDP connections to
@@ -40,7 +41,9 @@ UDP::UDP(int rx, int tx):
 
   this->setBaudRate(9600);
   this->initializeNetworking();    
-  this->setDeviceIp();
+  IpAndConnection ipConn = this->getDeviceIp();
+  this->setDeviceIp(ipConn.ip);
+  connectionId = ipConn.connectionId;
   this->openConnections();
 
   Serial.println("--UDP setup complete");
@@ -115,7 +118,7 @@ void UDP::waitForOK() {
 
 // We ask the device for its MAC address and then look up the
 // address in a lookup table that maps MAC => IP address.
-const char *UDP::getDeviceIp() {
+IpAndConnection UDP::getDeviceIp() {
   this->sendATCommand("AT+CIFSR");
   char buf[100];
   while(true) {
@@ -135,25 +138,25 @@ const char *UDP::getDeviceIp() {
   sscanf(buf, "%[^,],\"%[^\"]\"", _, mac);
   delay(100);
 
-  for(byte i = 0; i < arraySize(macIpLookup); i++) {
+  byte i;
+  for(i = 0; i < arraySize(macIpLookup); i++) {
     if(strstr(macIpLookup[i][0], mac) != NULL) {
       Serial.println("Using IP: " + String(macIpLookup[i][1]));
-      return macIpLookup[i][1];
+      return { i, macIpLookup[i][1]};
     }
   }
 
   Serial.println("Unknown mac=" + String(mac));
 
-  return NULL;
+  return {0, NULL};
 }
 
 // Look up and set our IP from the look up table, using our mac address as the key
-void UDP::setDeviceIp() {    
+void UDP::setDeviceIp(const char *ip) {    
 
   //this->sendATCommand("AT+CIPSTA_CUR=\"192.168.1.12\",\"192.168.1.1\",\"255.255.255.0\"");
   //this->waitForOK();  
   Serial.println("Setting ip.");
-  const char *ip = this->getDeviceIp();
   char setIpCmd[100];
   snprintf(setIpCmd, 100, "AT+CIPSTA_CUR=\"%s\",\"192.168.1.1\",\"255.255.255.0\"", ip);
   Serial.print("=");Serial.print(setIpCmd);Serial.println("=");

@@ -11,12 +11,13 @@ typedef struct {
 class Protocol 
 {
   public:
-    Protocol(UDP * connection, int connectionId);
+    Protocol(UDP * connection, int remoteId);
     void send(String message);
     ReceivedMessage receive();
   private:
     UDP * _connection;
-    int _connectionId;
+    int _remoteId;
+    int _self;
 };
 
 #endif

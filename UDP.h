@@ -4,6 +4,11 @@
 #include <AltSoftSerial.h>
 #include "Arduino.h"
 
+typedef struct {
+  byte connectionId;
+  const char *ip;
+} IpAndConnection;
+
 class UDP
 {
   public:
@@ -12,11 +17,12 @@ class UDP
     int openConnection(const char *ip, int port, int connectionId);
     void send(int connectionId, String message);
     void readLine(char *output, int len);
+    byte connectionId;
   private:
     AltSoftSerial mySerial;
     void sendATCommand(const char *message);
-    const char *getDeviceIp();
-    void setDeviceIp();
+    IpAndConnection getDeviceIp();
+    void setDeviceIp(const char *ip);
     void setBaudRate(int baud);
     void openConnections();
     void initializeNetworking();
