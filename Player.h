@@ -8,7 +8,7 @@ class Player
   public:
     Player(byte pin);
     void play(short pitch, short duration);
-    void playTune(byte tuneLength, byte tune[][2]);
+    void playTune(byte tuneLength, short tune[][2]);
   private:
     byte _pin;
 };

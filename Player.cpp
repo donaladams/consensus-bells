@@ -18,7 +18,7 @@ void Player::play(short pitch, short duration) {
 };
 
 
-void Player::playTune(byte tuneLength, byte tune[][2]) {
+void Player::playTune(byte tuneLength, short tune[][2]) {
  //output an frequency
  for(byte thisNote=0;thisNote<tuneLength;thisNote++)
  {

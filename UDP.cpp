@@ -19,8 +19,9 @@ const char setupCommands[][40] = {
 
 // Map MAC addresses to IPs for static IP assignment
 const char macIpLookup[][2][18] = {
-  {"", ""},
-  {"a0:20:a6:12:39:32", "192.168.1.11" },
+  { "", "" },
+  { "a0:20:a6:12:39:32", "192.168.1.11" },
+  { "a0:20:a6:17:d6:83", "192.168.1.12" }
 };
 
 // All the IPs we'll open UDP connections to

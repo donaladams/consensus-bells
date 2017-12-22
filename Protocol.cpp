@@ -34,5 +34,5 @@ ReceivedMessage Protocol::receive() {
   sscanf(buf, "%[^:]:%d~%s", &junk, &id, &msg);
   Serial.println("Leaving Protocol::receive");
 
-  return { id, String(msg) };
+  return { id, msg };
 }

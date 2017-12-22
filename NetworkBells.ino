@@ -1,8 +1,10 @@
 #include "pitches.h"
-//#include "Player.h"
+#include "Player.h"
 #include "Songs.h"
 #include "UDP.h"
 #include "Protocol.h"
+
+#define arraySize(a) sizeof(a)/sizeof(a[0])
 
 const int buzzer = 12;//the pin of the active buzzer
 const int interruptPin = 2;
@@ -16,7 +18,9 @@ void setup() {
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
-
+  
+  Player player(buzzer);
+  
   Serial.println("Running."); 
   UDP connection(WIFI_RX, WIFI_TX);
 
@@ -31,15 +35,15 @@ void setup() {
 
   devices[2].send("jingle");
 
-  
   while(true) {
     ReceivedMessage msg = devices[0].receive(); // We ALWAYS receive on the 0 connection
     
     Serial.print("Received "); Serial.print(msg.msg); Serial.println(" from " + String(msg.connectionId));
         
-    if(msg.msg.equals("jingle")) {
+    if(strcmp(msg.msg, "jingle") == 0) {
+      player.playTune(arraySize(songs::jingleBells), songs::jingleBells);
       devices[msg.connectionId].send("bells");
-    } else if(msg.msg.equals("bells")) {
+    } else if(strcmp(msg.msg, "bells") == 0) {
       devices[msg.connectionId].send("jingle");
     } else {
       devices[msg.connectionId].send("don't know that one.");
@@ -48,8 +52,6 @@ void setup() {
 }
 
 void loop() { // run over and over
-//  Serial.println("In the loop!");
-  //Player player(buzzer);
-  //player.playTune(songs::jingleBellsLength, songs::jingleBells);
+
 }
 

@@ -5,7 +5,7 @@
 
 typedef struct {
   byte connectionId;
-  String msg;
+  char *msg;
 } ReceivedMessage;
 
 class Protocol 
