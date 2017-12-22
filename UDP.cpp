@@ -129,7 +129,7 @@ IpAndConnection UDP::getDeviceIp() {
        break;
      }
 
-     Serial.println("getDeviceIp() Skipping: -" + String(buf) + "-");
+//     Serial.println("getDeviceIp() Skipping: -" + String(buf) + "-");
   }
 
   this->waitForOK();
@@ -142,12 +142,11 @@ IpAndConnection UDP::getDeviceIp() {
   byte i;
   for(i = 0; i < arraySize(macIpLookup); i++) {
     if(strstr(macIpLookup[i][0], mac) != NULL) {
-      Serial.println("Using IP: " + String(macIpLookup[i][1]));
       return { i, macIpLookup[i][1]};
     }
   }
 
-  Serial.println("Unknown mac=" + String(mac));
+//  Serial.println("Unknown mac=" + String(mac));
 
   return {0, NULL};
 }
@@ -157,10 +156,10 @@ void UDP::setDeviceIp(const char *ip) {
 
   //this->sendATCommand("AT+CIPSTA_CUR=\"192.168.1.12\",\"192.168.1.1\",\"255.255.255.0\"");
   //this->waitForOK();  
-  Serial.println("Setting ip.");
+//  Serial.println("Setting ip.");
   char setIpCmd[100];
   snprintf(setIpCmd, 100, "AT+CIPSTA_CUR=\"%s\",\"192.168.1.1\",\"255.255.255.0\"", ip);
-  Serial.print("=");Serial.print(setIpCmd);Serial.println("=");
+//  Serial.print("=");Serial.print(setIpCmd);Serial.println("=");
   this->sendATCommand(setIpCmd);
   this->waitForOK();
 }
@@ -181,7 +180,7 @@ void UDP::setBaudRate(int baud) {
 // Send all the AT commands we need to get networking running properly.
 void UDP::initializeNetworking() {
   for(byte i=0; i < arraySize(setupCommands); i++) {
-    Serial.println("Attempting: "); Serial.println(setupCommands[i]); 
+//    Serial.println("Attempting: "); Serial.println(setupCommands[i]); 
     this->sendATCommand(setupCommands[i]);
     this->waitForOK();
     delay(50);
@@ -190,7 +189,7 @@ void UDP::initializeNetworking() {
 
 // Open one UDP session (not really a connection) for each device.
 void UDP::openConnections() {
-  Serial.println("Opening connections");
+//  Serial.println("Opening connections");
   for(byte i=0; i < arraySize(ips); i++) {
     this->openConnection(ips[i], 7000, i);
   }

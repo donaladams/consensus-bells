@@ -21,7 +21,7 @@ void setup() {
   
   Player player(buzzer);
   
-  Serial.println("Running."); 
+//  Serial.println("Running."); 
   UDP connection(WIFI_RX, WIFI_TX);
 
   // Initiate an open protocol with each of the known devices
@@ -41,9 +41,9 @@ void setup() {
     Serial.print("Received "); Serial.print(msg.msg); Serial.println(" from " + String(msg.connectionId));
         
     if(strcmp(msg.msg, "jingle") == 0) {
-      player.playTune(arraySize(songs::jingleBells), songs::jingleBells);
       devices[msg.connectionId].send("bells");
     } else if(strcmp(msg.msg, "bells") == 0) {
+      player.playTune(arraySize(songs::jingleBells), songs::jingleBells);
       devices[msg.connectionId].send("jingle");
     } else {
       devices[msg.connectionId].send("don't know that one.");
